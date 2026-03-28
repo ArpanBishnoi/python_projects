@@ -8,3 +8,7 @@ class chef:
 
     def makes_poha(self):
      print('The chef makes poha')
+      
+    def makes_pizza(self):
+     print('the chef makes pizza') 
+      
