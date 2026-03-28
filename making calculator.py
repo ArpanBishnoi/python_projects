@@ -1,0 +1,6 @@
+num1 = input('Enter your number')
+num2 = input('Enter the second number')
+result = float(num1) * float(num2)
+print()
+print()
+print(result)

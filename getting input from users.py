@@ -1,0 +1,7 @@
+name = input('Enter your name :')
+age = input('Enter your age :')
+city = input('Enter your city :')
+print()
+print()
+print()
+print('Hey ' + name + ' ,your age is ' + age + ' and you live in ' + city + ' !')
