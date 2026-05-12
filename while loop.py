@@ -1,6 +1,7 @@
 t = 111
-while t>= 100:
+while t<= 1000:
+     t = t + 1
      print(t)
-     t = t*19823
+     
 print()
 print('Khatam tata bye bye')
