@@ -56,8 +56,8 @@ def ask_ai(user_id,question):
     retrieved_memory = search_memory(user_id,question)
     notes_context = '\n'.join(retrieved_notes)
     memory_context = '\n'.join(retrieved_memory)
-else:
-    memory_context = ""
+    else:
+         memory_context = ""
     prompt= f"""
     You are a helpful AI assistant.
     use the user's notes and memory to answer the question.
