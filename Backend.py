@@ -1,8 +1,6 @@
 import os 
 from google import genai
 gemini_client = genai.Client(api_key=os.getenv('Gemini_API_KEY'))
-from pyngrok import ngrok
-ngrok.set_auth_token(os.getenv('NGROK_AUTH_TOKEN'))
 import uvicorn
 from fastapi import FastAPI,HTTPException
 import sqlite3
