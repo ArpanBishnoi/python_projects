@@ -8,7 +8,7 @@ import chromadb
 from pydantic import BaseModel
 from fastapi import FastAPI
 app = FastAPI()
-conn = sqlite3.connect('/content/drive/MyDrive/Saas.db',check_same_thread = False)
+conn = sqlite3.connect('Saas.db',check_same_thread = False)
 cursor = conn.cursor()
 conn.commit
 client = chromadb.PersistentClient(path = '/content/drive/MyDrive/chroma_db')
