@@ -29,7 +29,7 @@ if not st.session_state['logged_in']:
  login_password = st.text_input('password',type='password',key='login_password')
  if st.button('Login'):
      response = requests.post(
-        'https://snap-sadness-emphasis.ngrok-free.dev/login',
+        'https://python-projects-6-7me7.onrender.com/login',
         json= {
             'username': login_username,
             'email': login_email,
@@ -55,7 +55,7 @@ if not st.session_state['logged_in']:
                                   key='register_password')
  if st.button('Register'):
      response= requests.post(
-        'https://snap-sadness-emphasis.ngrok-free.dev/Register',
+        'https://python-projects-6-7me7.onrender.com/Register',
         json ={'username': register_username,
             'email': register_email,
             'password':register_password 
@@ -70,7 +70,7 @@ else:
          content_text = st.text_area('Add note here')
          if st.button('Add note'):
              response = requests.post(
-                'https://snap-sadness-emphasis.ngrok-free.dev/notes',
+                'https://python-projects-6-7me7.onrender.com/notes',
              json = {'user_id' : st.session_state['user_id'],
                 'content': content_text
              }
@@ -83,7 +83,7 @@ else:
          question_input =st.text_area('Enter your question here')
          if st.button('ASK'):
              response= requests.post(
-               'https://snap-sadness-emphasis.ngrok-free.dev/ask',
+               'https://python-projects-6-7me7.onrender.com/ask',
              json= {'user_id': st.session_state['user_id'],
                  'question': question_input
                  }
@@ -94,7 +94,7 @@ else:
          st.header('Read notes')
          if st.button('READ YOUR NOTES'):
              response = requests.get(
-             'https://snap-sadness-emphasis.ngrok-free.dev/read_notes',
+             'https://python-projects-6-7me7.onrender.com/read_notes',
              params= {'user_id': st.session_state['user_id']
                      }
              )
@@ -106,7 +106,7 @@ else:
          update_note = st.text_input('new content')
          if st.button('Update note'):
              response=requests.put(
-              'https://snap-sadness-emphasis.ngrok-free.dev/update notes',
+              'https://python-projects-6-7me7.onrender.com/update notes',
                json = {
                 'id': note_id,
                 'content': update_note
@@ -119,7 +119,7 @@ else:
          delete_id =st.number_input('enter your note id',min_value =1,key='delete_note')
          if st.button('delete'):
              response = requests.delete(
-             'https://snap-sadness-emphasis.ngrok-free.dev/Delete notes',
+             'https://python-projects-6-7me7.onrender.com/Delete notes',
              params = {'delete_id':delete_id}
              )
              st.write(response.status_code)
