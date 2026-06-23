@@ -8,7 +8,7 @@ import chromadb
 from pydantic import BaseModel
 from fastapi import FastAPI
 app = FastAPI()
-@app.get('/)
+@app.get('/')
 def home():
     return {'message': 'API is running'
 conn = sqlite3.connect('Saas.db',check_same_thread = False)
