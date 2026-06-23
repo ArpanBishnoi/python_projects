@@ -55,7 +55,8 @@ def ask_ai(user_id,question):
       )
     retrieved_memory = search_memory(user_id,question)
     notes_context = '\n'.join(retrieved_notes)
-    memory_context = '\n'.join(retrieved_memory)
+    if retrieved_memory:
+         memory_context = '\n'.join(retrieved_memory)
     else:
          memory_context = ""
     prompt= f"""
