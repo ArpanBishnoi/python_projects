@@ -1,6 +1,0 @@
-fastapi
-uvicorn
-google-genai
-chromadb
-pydantic
-pyngrok

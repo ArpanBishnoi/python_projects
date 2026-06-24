@@ -8,13 +8,10 @@ import chromadb
 from pydantic import BaseModel
 from fastapi import FastAPI
 app = FastAPI()
-@app.get('/')
-def home():
-    return {'message': 'API is running'}
-conn = sqlite3.connect('Saas.db',check_same_thread = False)
+conn = sqlite3.connect('/content/drive/MyDrive/Saas.db',check_same_thread = False)
 cursor = conn.cursor()
 conn.commit
-client = chromadb.PersistentClient(path = 'chroma_db')
+client = chromadb.PersistentClient(path = '/content/drive/MyDrive/chroma_db')
 notes_collection = client.get_or_create_collection(name='NOTEs')
 memory_collection = client.get_or_create_collection(name='MEMOORY')
 cursor.execute('CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT,username TEXT,email TEXT,password TEXT)')
@@ -58,10 +55,7 @@ def ask_ai(user_id,question):
       )
     retrieved_memory = search_memory(user_id,question)
     notes_context = '\n'.join(retrieved_notes)
-    if retrieved_memory:
-         memory_context = '\n'.join(retrieved_memory)
-    else:
-         memory_context = ""
+    memory_context = '\n'.join(retrieved_memory)
     prompt= f"""
     You are a helpful AI assistant.
     use the user's notes and memory to answer the question.
