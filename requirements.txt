@@ -1,0 +1,7 @@
+python-jose[cryptography]
+fastapi
+uvicorn
+google-genai
+chromadb
+bcrypt
+
