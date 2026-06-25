@@ -47,15 +47,15 @@ conn.commit()
 def add_users(username, email, password):
     cursor.execute(
         "INSERT INTO Users(username,email,password) VALUES(?,?,?)",
-        (username, email, password),
+        (username, email, password)
     )
     conn.commit()
 
 
 def login_users(username, email, password):
     cursor.execute(
-        "SELECT * FROM Users WHERE username = ? AND email = ? AND password = ?",
-        (username, email),
+        "SELECT * FROM Users WHERE username = ? AND email = ?",
+        (username, email)
     )
     user = cursor.fetchone()
     if user and verify_password(password, user[3]):
@@ -168,8 +168,8 @@ def create_user(item: USERINPUT):
     try:
         print("REGISTER POINT HIT")
         print(item)
-        hashed_passwored = hash_password(item.password)
-        add_users(item.username, item.email, hashed_passwored)
+        hashed_password = hash_password(item.password)
+        add_users(item.username, item.email, hashed_password)
         return {"message": "User added successfully!!!"}
     except Exception as e:
         print("register error", e)
