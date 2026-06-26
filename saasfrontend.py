@@ -42,7 +42,7 @@ if not st.session_state['logged_in']:
      if response.status_code == 200:
          data = response.json()
          st.session_state['logged_in'] = True
-         st.session_state['user_id'] = data['user_id']
+         st.session_state.token = data['token']
          st.success('login Successfully')
          st.session_state['username'] = login_username
          st.success(f"WELCOME {st.session_state['username']}")
