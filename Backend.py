@@ -17,7 +17,7 @@ ALGORITHM = 'HS256'
 def create_access_token(user_id):
     expire = datetime.utcnow() + timedelta(days = 1)
     payload = {
-        'sub': str(user_id)
+        'sub': str(user_id),
         'exp': expire
     }
     token = jwt.encode(
