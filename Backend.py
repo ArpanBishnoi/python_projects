@@ -1,7 +1,8 @@
 import os
 import bcrypt
 from google import genai
-
+from jose import jwt
+from datetime import datetime,timedelta
 gemini_client = genai.Client(api_key=os.getenv("Gemini_API_KEY"))
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -11,7 +12,21 @@ from pydantic import BaseModel
 from fastapi import FastAPI
 
 app = FastAPI()
-
+SECRET_KEY = 'super_secret_key_change_later'
+ALGORITHM = 'HS256'
+def create_access_token(user_id):
+    expire = datetime.utcnow() + timedelta(days = 1)
+    payload = {
+        'sub': str(user_id)
+        'exp': expire
+    }
+    token = jwt.encode(
+    payload,
+    SECRET_KEY,
+    algorithm=ALGORITHM
+    
+   )
+    return token
 
 @app.get("/")
 def home():
@@ -180,6 +195,7 @@ def create_user(item: USERINPUT):
 def login(item: LOGINUSER):
     user = login_users(item.username, item.email, item.password)
     if user:
+        token = create_access_token([0])
         return {"message": "logined susccessfully", "user_id": user[0]}
     else:
         raise HTTPException(status_code=404, detail="User not found")
@@ -225,3 +241,5 @@ def delete_notes(delete_id: int):
     )  # rememeber that we use i in place of user_id cause id increases but with use_id =1 we can have thousands of users so all will be deleted as id keep increasing but user_id can be shared by many users
     conn.commit()
     return {"message": "Note Deleted !!!"}
+cursor.execute('SELECT username,password FROM Users')
+print(cursor.fetchall())
