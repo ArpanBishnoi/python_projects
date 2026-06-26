@@ -196,7 +196,7 @@ def login(item: LOGINUSER):
     user = login_users(item.username, item.email, item.password)
     if user:
         token = create_access_token([0])
-        return {"message": "logined susccessfully", "user_id": user[0]}
+        return {"message": "logined susccessfully", "token": token}
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
