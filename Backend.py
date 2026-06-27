@@ -1,8 +1,11 @@
 import os
 import bcrypt
 from google import genai
-from jose import jwt
-from datetime import datetime,timedelta
+from jose import jwt,JWTError
+from fastapi import Depends
+from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
+from datetime import datetime, timedelta
+
 gemini_client = genai.Client(api_key=os.getenv("Gemini_API_KEY"))
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -12,21 +15,28 @@ from pydantic import BaseModel
 from fastapi import FastAPI
 
 app = FastAPI()
-SECRET_KEY = 'super_secret_key_change_later'
-ALGORITHM = 'HS256'
+SECRET_KEY = "super_secret_key_change_later"
+ALGORITHM = "HS256"
+security = HTTPBearer()
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+        user_id = int(payload['sub'])
+        return user_id
+    except JWTError:
+        raise HTTPException(
+            status_code=401,
+            detail= 'invalid or expired token'
+        )
+
 def create_access_token(user_id):
-    expire = datetime.utcnow() + timedelta(days = 1)
-    payload = {
-        'sub': str(user_id),
-        'exp': expire
-    }
-    token = jwt.encode(
-    payload,
-    SECRET_KEY,
-    algorithm=ALGORITHM
-    
-   )
+    expire = datetime.utcnow() + timedelta(days=1)
+    payload = {"sub": str(user_id), "exp": expire}
+    token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
+
 
 @app.get("/")
 def home():
@@ -62,15 +72,14 @@ conn.commit()
 def add_users(username, email, password):
     cursor.execute(
         "INSERT INTO Users(username,email,password) VALUES(?,?,?)",
-        (username, email, password)
+        (username, email, password),
     )
     conn.commit()
 
 
 def login_users(username, email, password):
     cursor.execute(
-        "SELECT * FROM Users WHERE username = ? AND email = ?",
-        (username, email)
+        "SELECT * FROM Users WHERE username = ? AND email = ?", (username, email)
     )
     user = cursor.fetchone()
     if user and verify_password(password, user[3]):
@@ -144,7 +153,7 @@ def ask_ai(user_id, question):
     return answer
 
 
-def search_memory(user_id, question):
+def search_memory(user_id,question):
     results = memory_collection.query(
         query_texts=[question], where={"user_id": user_id}, n_results=2
     )
@@ -176,8 +185,8 @@ class LOGINUSER(BaseModel):
     username: str
     email: str
     password: str
-
-
+class NOTEINPUTJWT(BaseModel):
+    content : str
 @app.post("/Register")
 def create_user(item: USERINPUT):
     try:
@@ -195,14 +204,14 @@ def create_user(item: USERINPUT):
 def login(item: LOGINUSER):
     user = login_users(item.username, item.email, item.password)
     if user:
-        token = create_access_token([0])
-        return {"message": "logined susccessfully",'user_id': user[0], "token": token}
+        token = create_access_token(user[0])
+        return {"message": "logined susccessfully", "user_id": user[0], "token": token}
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
 
 @app.post("/notes")
-def creat_note(item: NOTEINPUT):
+def creat_note(item: NOTEINPUTJWT,user_id : int =Depends(get_current_user)):
     try:
         print("ENDPOINT REACHED")
         print(item)
@@ -241,5 +250,7 @@ def delete_notes(delete_id: int):
     )  # rememeber that we use i in place of user_id cause id increases but with use_id =1 we can have thousands of users so all will be deleted as id keep increasing but user_id can be shared by many users
     conn.commit()
     return {"message": "Note Deleted !!!"}
-cursor.execute('SELECT username,password FROM Users')
+
+
+cursor.execute("SELECT username,password FROM Users")
 print(cursor.fetchall())
