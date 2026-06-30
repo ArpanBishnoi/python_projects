@@ -72,8 +72,8 @@ else:
          if st.button('Add note'):
              response = requests.post(
                 'https://python-projects-6-7me7.onrender.com/notes',
-             json = {'user_id' : st.session_state['user_id'],
-                'content': content_text
+             headers = {'Authorization': f"Bearer {st.session_state['token']}"}
+                json={'content': content_text
              }
               )
              st.write('Status:',
