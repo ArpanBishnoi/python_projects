@@ -5,7 +5,6 @@ from jose import jwt,JWTError
 from fastapi import Depends
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
 from datetime import datetime, timedelta
-
 gemini_client = genai.Client(api_key=os.getenv("Gemini_API_KEY"))
 import uvicorn
 from fastapi import FastAPI, HTTPException
@@ -20,7 +19,8 @@ ALGORITHM = "HS256"
 security = HTTPBearer()
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    token = credentials.credentials
+    token = credentials.credentials# credentials = HTTPAuthorizationCredentials(scheme="Bearer",credentials="eyJHbGc..."
+#credentials create a list like this 
     try:
         payload = jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
         user_id = int(payload['sub'])
@@ -211,11 +211,11 @@ def login(item: LOGINUSER):
 
 
 @app.post("/notes")
-def creat_note(item: NOTEINPUTJWT,user_id : int =Depends(get_current_user)):
+def create_note(item: NOTEINPUTJWT,user_id: int =Depends(get_current_user)):
     try:
         print("ENDPOINT REACHED")
         print(item)
-        add_notes(item.user_id, item.content)
+        add_notes(user_id, item.content)
         return {"message": "Note Added !!!"}
     except Exception as e:
         print("ERROR:", e)
