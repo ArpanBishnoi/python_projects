@@ -31,7 +31,7 @@ if not st.session_state['logged_in']:
      response = requests.post(
         'https://python-projects-6-7me7.onrender.com/login',
         json= {
-            'username': login_username,
+            'username': login_username, 
             'email': login_email,
             'password':login_password
             
@@ -85,7 +85,8 @@ else:
          if st.button('ASK'):
              response= requests.post(
                'https://python-projects-6-7me7.onrender.com/ask',
-             json= {'user_id': st.session_state['user_id'],
+               headers= {'Authorization': f"Bearer{st.session_state['token']}"}
+             json= {
                  'question': question_input
                  }
              )
@@ -96,8 +97,7 @@ else:
          if st.button('READ YOUR NOTES'):
              response = requests.get(
              'https://python-projects-6-7me7.onrender.com/read_notes',
-             params= {'user_id': st.session_state['user_id']
-                     }
+             headers={'Authorization': f"Bearer {st.session_state['token']}"}
              )
              st.write(response.status_code)
              st.write(response.json())
