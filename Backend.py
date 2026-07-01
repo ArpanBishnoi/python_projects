@@ -187,8 +187,10 @@ class LOGINUSER(BaseModel):
     password: str
 class NOTEINPUTJWT(BaseModel):
     content : str
+class QuestionInputJWT(BaseModel):
+     question : str    
 @app.post("/Register")
-def create_user(item: USERINPUT):
+def create_user(item: USERINPUT):         
     try:
         print("REGISTER POINT HIT")
         print(item)
@@ -223,13 +225,12 @@ def create_note(item: NOTEINPUTJWT,user_id: int =Depends(get_current_user)):
 
 
 @app.post("/ask")
-def ask(item: QuestionInput):
-    response = ask_ai(item.user_id, item.question)
+def ask(item: QuestionInputJWT,user_id : int = Depends(get_current_user)):
+    response = ask_ai(user_id, item.question)
     return {"response": response}
 
-
 @app.get("/read_notes")
-def read_notes(user_id: int):
+def read_notes(user_id: int = Depends(get_current_user)):
     notes = get_notes(user_id)
     if not notes:
         raise HTTPException(status_code=404, detail="Notes not found")
@@ -237,14 +238,14 @@ def read_notes(user_id: int):
 
 
 @app.put("/update notes")
-def update_notes(item: UPDATENOTEINPUT):
+def update_notes(item: UPDATENOTEINPUT,user_id : int = Depends(get_current_user)):
     cursor.execute("UPDATE Notes SET content = ? WHERE id = ?", (item.content, item.id))
     conn.commit()
     return {"message": "Note Updated !!!"}
 
 
 @app.delete("/Delete notes")
-def delete_notes(delete_id: int):
+def delete_notes(delete_id: int,user_id : int = Depends(get_current_user)):
     cursor.execute(
         "Delete FROM Notes WHERE id = ?", (delete_id,)
     )  # rememeber that we use i in place of user_id cause id increases but with use_id =1 we can have thousands of users so all will be deleted as id keep increasing but user_id can be shared by many users
