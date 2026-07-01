@@ -72,7 +72,7 @@ else:
          if st.button('Add note'):
              response = requests.post(
                 'https://python-projects-6-7me7.onrender.com/notes',
-             headers = {'Authorization': f"Bearer {st.session_state['token']}"}
+             headers = {'Authorization': f"Bearer {st.session_state['token']}"},
                 json={'content': content_text
              }
               )
@@ -85,7 +85,7 @@ else:
          if st.button('ASK'):
              response= requests.post(
                'https://python-projects-6-7me7.onrender.com/ask',
-               headers= {'Authorization': f"Bearer{st.session_state['token']}"}
+               headers= {'Authorization': f"Bearer{st.session_state['token']}"},
              json= {
                  'question': question_input
                  }
